@@ -7,9 +7,9 @@ from UserName_ID import Get_Group_Name_Id
 from GoogleSheet import get_sheet_row,Create_Row
 
 
-api_id = '28110734'
-api_hash = '7562e8af60beeb05b10ddac0dd69512e62'
-phone_number = '+9182888329988'
+api_id = '25500977'
+api_hash = '7cf41fa26b716a01a46d744758bfbde2'
+phone_number = '+61483212824'
 Boost_OnlyFans_Group_id = -1001173439993
 Group_Name = "Boost OnlyFans"
 
@@ -38,7 +38,6 @@ async def main():
         except Exception as e:
             print(f"An error occurred: {e}")
 
-
 async def handle_message(client, event, groups_names,Group_Id):  # Add client parameter here
     try:
         if not hasattr(event, 'handled') or not event.handled:
@@ -49,9 +48,6 @@ async def handle_message(client, event, groups_names,Group_Id):  # Add client pa
             # User_Id = group_name_id.get('User_Id')
     except Exception as e:
         pass
-
-
-
 
 if __name__ == '__main__':
     asyncio.run(main())
