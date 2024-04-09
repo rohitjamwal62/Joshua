@@ -1,8 +1,9 @@
 from telethon.sync import TelegramClient
 
-api_id = '22842637'
-api_hash = '84efbd849705454b21dd41095bc1ddbb'
-phone_number = '+16312521243'
+
+api_id = '25500977'
+api_hash = '7cf41fa26b716a01a46d744758bfbde2'
+phone_number = '+61483212824'
 
 THE_AUTIST_KITCHEN_Group_Id = -1001606570958
 Macro_Newletter_Alpha4_Group_Id = -1001810340094
