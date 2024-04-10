@@ -1,155 +1,86 @@
-import json,requests,shutil,time,asyncio
+# entry_min = 40
+# entry_max = 42.85
+# stop_loss = 38.73
 
-try:
-    from . import Innovation
-    from . import Informatique
-    from . import Research
+# # Define the profit and loss percentages
+# profit_percentage = 0.1  # 10% profit
+# loss_percentage = 0.03  # 3% loss
 
-except:
-    import Innovation
-    import Informatique
-    import Research
-from logger import error_log
-import docx
-import random
-from docx.shared import Pt
-from docx.shared import RGBColor
-from flask import Flask, render_template, request, send_file, send_from_directory, after_this_request, logging, \
-    current_app
+# # Calculate the profit and loss prices
+# profit_price = entry_min * (1 + profit_percentage)
+# loss_price = entry_min * (1 - loss_percentage)
 
-from scholarly import scholarly
-import random
-from docx.shared import Pt
-import docx.enum.text
-from docx.oxml.ns import qn
-from docx.oxml import OxmlElement
-import os, sys
-import threading
-import datetime
+# # Print the results
+# print(f"Entry Price Range: ${entry_min} - ${entry_max}")
+# print(f"Stop Loss: ${stop_loss}")
+# print(f"Profit Target: ${profit_price:.2f} ({profit_percentage*100}% profit)")
+# print(f"Loss Limit: ${loss_price:.2f} ({loss_percentage*100}% loss)")
 
-current_year = datetime.datetime.now().year
-app = Flask(__name__)
-generated_files = []
-for filename in os.listdir('files'):
-    file_path = os.path.join('files', filename)
-    try:
-        if os.path.isfile(file_path) or os.path.islink(file_path):
-            os.unlink(file_path)
-        elif os.path.isdir(file_path):
-            shutil.rmtree(file_path)
-    except Exception as e:
-        print(f'Failed to delete {file_path}. Reason: {e}')
+# def calculate_sell_off_prices(purchase_price, profit_percent, loss_percent):
+#     profit_price = purchase_price * (1 + profit_percent / 100)
+#     loss_price = purchase_price * (1 - loss_percent / 100)
+#     return profit_price, loss_price
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# # Example usage
+# purchase_price = 42.85  # Example purchase price
+# profit_percent = 10  # Example profit percentage
+# loss_percent = 3  # Example loss percentage
 
-threads = []
-async def process_file(file, index, project_type):
-    if file.filename != '':
-        filename = f"sample_{index + 1}.docx"
-        filenames_real = file.filename
-        file.save(filename)
-        await create_document(index + 1, project_type, filenames_real)
+# profit_price, loss_price = calculate_sell_off_prices(purchase_price, profit_percent, loss_percent)
+# print(f"Sell-off price for profit: {profit_price}")
+# print(f"Sell-off price for loss: {loss_price}")
+purchase_price_range = [40, 41.5, 42.85]
+target_prices = [43.5, 44, 45, 46, 48, 50, 52, 55, 58, 61]
+stop_loss_price = 38.73
+profit_threshold = 0.10  # 10%
+loss_threshold = 0.03  # 3%
+for purchase_price in purchase_price_range:
+    print(f"Purchase Price: ${purchase_price:.2f}")
+    print("Target Prices:")
+    for target_price in target_prices:
+        profit_percentage = ((target_price / purchase_price) - 1) * 100
+        print(f"  Target Price: ${target_price:.2f} -> Profit: {profit_percentage:.2f}%")
+
+    # print("Stop Loss Price:")
+    # loss_percentage = ((stop_loss_price / purchase_price) - 1) * 100
+    # print(f"  Stop Loss Price: ${stop_loss_price:.2f} -> Loss: {loss_percentage:.2f}%")
+    # print()
 
 
-# @app.route('/thanks',methods=['POST'])
-# def thanks():
-#     return render_template('thanks.html', files=generated_files)
+# def calculate_percentages(entry_price, profit_pct, loss_pct):
+#   """
+#   Calculates sell-off prices for profit and stop-loss based on entry price and percentages.
 
+#   Args:
+#       entry_price (float): The price at which the coin was purchased.
+#       profit_pct (float): The percentage profit to target for sell-off (e.g., 0.1 for 10%).
+#       loss_pct (float): The percentage loss to tolerate before selling at a loss (e.g., 0.03 for 3%).
 
-@app.route('/upload', methods=['POST'])
-async def upload():
-    # client_name = request.form.get('name')
-    files = request.files.getlist('files[]')
-    project_types = request.form.getlist('projectType[]')  # Get the list of project types
-    # threads = []
-    for index, file in enumerate(files):
-        project_type = project_types[index] if index < len(project_types) else 'Default'
-        await process_file(file, index, project_type)
-    #     thread = threading.Thread(target=process_file, args=(file, index, project_type))
-    #     threads.append(thread)
-    #     thread.start()
+#   Returns:
+#       tuple: A tuple containing the sell-off price for profit, stop-loss price, and a dictionary with entry and target prices.
+#   """
 
-    # for thread in threads:
-    #     thread.join()
-    print("ALL DONE ####################################")
-    print(generated_files)
-    return render_template('thanks.html')
+#   # Calculate sell price for profit
+#   profit_price = entry_price * (1 + profit_pct)
 
+#   # Calculate stop-loss price
+#   stop_loss_price = entry_price * (1 - loss_pct)
 
-@app.route('/thanks')
-def thanks():
-    # Assuming 'generated_files' is accessible here, otherwise you might need to adjust
-    return render_template('thanks.html', files=generated_files)
+#   # Prepare target prices dictionary
+#   target_prices = {
+#       "Entry": entry_price
+#   }
 
-@app.route('/view_log')
-def view_log():
-    try:
-        error_log = open(os.path.join(os.getcwd(), 'logs', 'error_logs.txt'), 'r')
-        error_log_str = error_log.read()
-        return str(error_log_str)
-    except Exception as e:
-        return str(e)
+#   return profit_price, stop_loss_price, target_prices
 
-async def create_document(index, project_type, filename_real):
-    try:
-        if project_type == "R&D":
-            print("111111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
-            file = Research.create_document(index, filename_real)
-            generated_files.append(file)
-        elif project_type == "Informatique":
-            print("2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222")
-            file = Informatique.create_document(index, filename_real)
-            generated_files.append(file)
-        elif project_type == "Innovation":
-            print("3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333")
-            file = Innovation.create_document(index, filename_real)
-            generated_files.append(file)
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        error = str(exc_type) + ' ' + str(fname) + ' ' + str(exc_tb.tb_lineno)
-        error_log(error)
+# # Example usage with adjustable percentages
+# entry_price = 41.5
+# profit_pct = 0.1  # Adjust for desired profit percentage (e.g., 0.1 for 10%)
+# loss_pct = 0.03   # Adjust for desired loss tolerance (e.g., 0.03 for 3%)
 
+# sell_profit, stop_loss, target_prices = calculate_percentages(entry_price, profit_pct, loss_pct)
 
-@app.route('/download/<filename>')
-def download_file(filename):
-    directory = current_app.root_path  # Adjust based on your setup
-    # file_path = os.path.join(directory, filename)
-    file_path = f"files/{filename}"
-    print(f"Attempting to send file from path: {file_path}")  # Debugging line
-    current_app.logger.debug(f"Attempting to send file from path: {file_path}")
+# print(f"Sell for profit at: ${sell_profit:.2f}")
+# print(f"Stop-loss at: ${stop_loss:.2f}")
+# print(target_prices)
 
-    # Security check to prevent directory traversal attacks
-    if '..' in filename or filename.startswith('/'):
-        return "Invalid filename", 400
-
-    # Check if the file exists to prevent FileNotFoundError
-    if not os.path.exists(file_path):
-        return "File not found", 404
-
-    # Attempt to delete the file after sending it
-    @after_this_request
-    def remove_file(response):
-        try:
-            os.remove(file_path)
-            current_app.logger.info(f"Successfully removed {file_path}")
-        except Exception as error:
-            current_app.logger.error(f"Error removing file after download: {error}")
-        return response
-
-    # Stream the file content directly
-    try:
-        return send_file(file_path, as_attachment=True)
-    except Exception as e:
-        current_app.logger.error(f"Error sending file: {e}")
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        error = str(exc_type) + ' ' + str(fname) + ' ' + str(exc_tb.tb_lineno)
-        error_log(error)
-        return "Error sending file", 500
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
