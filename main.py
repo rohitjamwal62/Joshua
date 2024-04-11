@@ -5,7 +5,7 @@ from datetime import datetime
 from GoogleSheet import get_sheet_row
 from UserName_ID import Get_Group_Name_Id
 from GoogleSheet import get_sheet_row,Create_Row
-# from match_string import StopLoss,Entry_Purchage
+from match_string import StopLoss,Entry_Purchage
 current_time = datetime.now()
 formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -42,6 +42,10 @@ async def handle_message(client, event, groups_names,Group_Id):  # Add client pa
             search_string = "long"
             string_lower = str(String_Here).lower()
             Purchage_Price = Entry_Purchage(string_lower)
+            profit_percent = 20
+            loss_percent = 10
+            data = main(Purchage_Price,profit_percent,loss_percent)
+            print(data)
             if search_string in string_lower:
                 print("yessssssssssssssssssssssss")
             else:
