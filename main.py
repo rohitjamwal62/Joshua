@@ -5,7 +5,7 @@ from datetime import datetime
 from GoogleSheet import get_sheet_row
 from UserName_ID import Get_Group_Name_Id
 from GoogleSheet import get_sheet_row,Create_Row
-from match_string import StopLoss
+# from match_string import StopLoss,Entry_Purchage
 current_time = datetime.now()
 formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -39,8 +39,15 @@ async def handle_message(client, event, groups_names,Group_Id):  # Add client pa
         if not hasattr(event, 'handled') or not event.handled:
             message = event.message
             String_Here = message.text
-            data = StopLoss(String_Here)
-            print(data,"===========")
+            search_string = "long"
+            string_lower = str(String_Here).lower()
+            Purchage_Price = Entry_Purchage(string_lower)
+            if search_string in string_lower:
+                print("yessssssssssssssssssssssss")
+            else:
+                print("Nooooooooooo")
+            # data = StopLoss(String_Here)
+            # print(data,"===========")
             # sender_id = message.sender_id  # Get the sender's ID
             # group_name_id = await Get_Group_Name_Id(client,Group_Id, sender_id)
             # UserName = group_name_id.get('UserName')
