@@ -13,7 +13,7 @@ def calculate_percentage_change(purchase_price, sell_price):
     return change
 
 
-def main(purchase_price,profit_percent,loss_percent):
+def main_calculation(purchase_price,profit_percent,loss_percent):
     Store_Calculation = dict()
     profit_price, loss_price = calculate_sell_off_prices(purchase_price, profit_percent, loss_percent)
     profit, loss = calculate_profit_and_loss(purchase_price, profit_price)
@@ -27,9 +27,12 @@ def main(purchase_price,profit_percent,loss_percent):
     Store_Calculation['loss_percentage'] = f'${loss_percentage:.2f}'
     return Store_Calculation
 
+def Coin_Name(String):
+    Coin = str(String).split('$')[1].split('/')[0].strip()
+    return Coin
 
-profit_percent = 20  # Default profit percentage
-loss_percent = 10  # Default loss percentage
+# profit_percent = 20  # Default profit percentage
+# loss_percent = 10  # Default loss percentage
 # # data = main(purchase_prices,profit_percent,loss_percent)
 # # print(data,"====")
 
@@ -44,5 +47,5 @@ loss_percent = 10  # Default loss percentage
 
 # purchase_price = eval(Entry_Purchage(String))
 
-data = main(64.27,profit_percent,loss_percent)
-print(data)
+# data = main(64.27,profit_percent,loss_percent)
+# print(data)

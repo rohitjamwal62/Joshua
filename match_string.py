@@ -1,5 +1,5 @@
 import re
-from main import handle_message
+
 def StopLoss(String):
     Text = str(String).split()[-1]
     return Text
@@ -34,6 +34,11 @@ STOP LOSS: 6
     
     
 
+def Coin_Name(String):
+    Coin = str(String).split('$')[1].split('/')[0].strip()
+    return Coin
+    
+    
 
 
 # data = StopLoss(String)
