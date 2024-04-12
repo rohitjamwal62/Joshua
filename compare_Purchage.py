@@ -8,7 +8,7 @@ def get_coin_price():
     data = response.json()
     
 #     print(data,"====")
-data = get_coin_price( )
+# data = get_coin_price( )
 # # Function to sell coin
 # def sell_coin():
 #     url = "https://www.coinspot.com.au/api/ro/my/balance"
