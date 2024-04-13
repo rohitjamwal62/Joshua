@@ -5,9 +5,9 @@ from datetime import datetime
 from GoogleSheet import get_sheet_row
 from UserName_ID import Get_Group_Name_Id
 from GoogleSheet import get_sheet_row,Create_Row
-from match_string import StopLoss,Entry_Purchage
+from match_string import StopLoss,Entry_Purchage,Coin_Name
 from Coinspot_API import Sell_Coin,Buy_Coin,Get_Current_Coin_Price
-from Telegram_Pull import main_calculation,Coin_Name
+from Telegram_Pull import main_calculation,stop
 current_time = datetime.now()
 formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -58,10 +58,11 @@ async def handle_message(client, event, groups_names,Group_Id):  # Add client pa
                 Check_Live_Price = Get_Current_Coin_Price(CoinName)
                 print(Check_Live_Price,"====")
                 if Check_Live_Price >= Target_price:
+                    Sell_Coin(CoinName,Purchage_Price) #Sell Coin Here
                     print("Profit................................")
                 if Check_Live_Price <= Loss:
-                    print("losssssssssssssssssssssssssssssssssssss")
-
+                    print("loss..................................")
+                    stop()
             else:
                 print("Nooooooooooo")
             # data = StopLoss(String_Here)

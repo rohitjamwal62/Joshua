@@ -1,3 +1,5 @@
+import sys
+
 def calculate_sell_off_prices(purchase_price, profit_percent, loss_percent):
     profit_price = purchase_price * (1 + profit_percent / 100)
     loss_price = purchase_price * (1 - loss_percent / 100)
@@ -31,21 +33,7 @@ def Coin_Name(String):
     Coin = str(String).split('$')[1].split('/')[0].strip()
     return Coin
 
-# profit_percent = 20  # Default profit percentage
-# loss_percent = 10  # Default loss percentage
-# # data = main(purchase_prices,profit_percent,loss_percent)
-# # print(data,"====")
 
-# String = """
-# Pair: $KSM/USDT
-# Direction: LonG
-# Exchanges: ByBit USDTLeverage: 3x
-# entry: 40.7 -41.5 -  42.85
-# TARGETS: 43.5 - 44 - 45 - 46 - 48 - 50 - 52 - 55 - 58 - 61
-# STOP LOSS: 6
-# """
-
-# purchase_price = eval(Entry_Purchage(String))
-
-# data = main(64.27,profit_percent,loss_percent)
-# print(data)
+def stop():
+    print("Stopping the script...")
+    sys.exit()
