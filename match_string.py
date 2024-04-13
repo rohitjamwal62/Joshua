@@ -19,13 +19,3 @@ def Entry_Purchage(String):
 def Coin_Name(String):
     Coin = str(String).split('$')[1].split('/')[0].strip()
     return Coin
-    
-String = """
-Pair: $KSM/USDT
-Direction: LonG
-Exchanges: ByBit USDTLeverage: 3x
-entry: 40.7 -41.5 -  42.85
-TARGETS: 43.5 - 44 - 45 - 46 - 48 - 50 - 52 - 55 - 58 - 61
-STOP LOSS: 6
-"""
-

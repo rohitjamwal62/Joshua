@@ -23,7 +23,10 @@ async def main():
                     # Re-read config.ini before processing each message
                     config.read('config.ini')
                     profit_percent = config.getint('Percentage', 'Profit_Percentage')
+                    
                     loss_percent = config.getint('Percentage', 'Loss_Percentage')
+                    print(profit_percent,"==========profit_percent")
+                    print(loss_percent,"==========loss_percent")
                     await handle_message(client, event, Group3_Name, NewGroup3_Id, profit_percent, loss_percent)
                 await client.run_until_disconnected()
         except errors.SessionPasswordNeededError:
