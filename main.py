@@ -46,14 +46,22 @@ async def handle_message(client, event, groups_names,Group_Id):  # Add client pa
             Purchage_Price = Entry_Purchage(string_lower)
             profit_percent = 20
             loss_percent = 10
-            data = main_calculation(Purchage_Price,profit_percent,loss_percent)
-            print(data)
+            cal = main_calculation(Purchage_Price,profit_percent,loss_percent)
+            Target_price = eval(cal.get('profit_price'))
+            Loss = eval(cal.get('loss_price'))
+            print(cal)
             if search_string in string_lower:
                 CoinName = Coin_Name()
                 print("yessssssssssssssssssssssss")
                 Buy_Coin(CoinName,Purchage_Price)
                 time.sleep(1)
-                Check_Live_Price = Get_Current_Coin_Price()
+                Check_Live_Price = Get_Current_Coin_Price(CoinName)
+                print(Check_Live_Price,"====")
+                if Check_Live_Price >= Target_price:
+                    print("Profit................................")
+                if Check_Live_Price <= Loss:
+                    print("losssssssssssssssssssssssssssssssssssss")
+
             else:
                 print("Nooooooooooo")
             # data = StopLoss(String_Here)
