@@ -1,27 +1,21 @@
-import os
-import time
-import asyncio
-import configparser
+import configparser,asyncio,time,os
 from datetime import datetime
 from telethon.sync import TelegramClient, errors
 from telethon.events import NewMessage
 from match_string import Entry_Purchage, Coin_Name
 from Coinspot_API import Sell_Coin, Buy_Coin, Get_Current_Coin_Price
-from Telegram_Pull import main_calculation, stop
+from Telegram_Pull import main_calculation,stop,send_email
 
 async def main():
     while True:  # Run indefinitely
         try:
             config = configparser.ConfigParser()
             config.read('config.ini')
-            
             api_id = config.getint('Telegram', 'api_id')
             api_hash = config.get('Telegram', 'api_hash')
             phone_number = config.get('Telegram', 'phone_number')
-
             NewGroup3_Id = config.getint('Groups', 'NewGroupId3')
             Group3_Name = config.get('GroupName', 'Group3')
-            
             async with TelegramClient('session_name', api_id, api_hash) as client:
                 await client.start(phone_number)
                 @client.on(NewMessage(chats=NewGroup3_Id))
@@ -48,18 +42,24 @@ async def handle_message(client, event, groups_names, Group_Id, profit_percent, 
             Purchage_Price = Entry_Purchage(string_lower)
             CoinName = Coin_Name(string_lower)
             Buy_Coin(CoinName.upper(), Purchage_Price)
-            print("Bought coin:", CoinName.upper(), "at price:", Purchage_Price)
+            Message_Sent = f"Bought coin:"+ " " +CoinName.upper()+" "+ "at price: "+ Purchage_Price
+            print(Message_Sent)
+            send_email("Buy Coin",Message_Sent)
+      
             while True:
                 cal = main_calculation(Purchage_Price, profit_percent, loss_percent)
                 Check_Live_Price = Get_Current_Coin_Price(CoinName)
-                # print("#############  Check Live Price : ", Check_Live_Price," ###############")
+                print("#############  Check Live Price : ", Check_Live_Price," ###############")
                 profit_price = eval(cal.get('profit_price'))
-                # print("Profit Price : ", profit_price)
+                print("Profit Price : ", profit_price)
                 loss_price = eval(cal.get('loss_price'))
-                # print("Loss Price : ", loss_price)
+                print("Loss Price : ", loss_price)
                 if Check_Live_Price >= profit_price:
-                    Sell_Coin(CoinName.upper(), Purchage_Price)
+                    Sell_Coin(CoinName.upper(), profit_price)
                     print("Sold coin for profit")
+                    Message_Sent = f"Sell coin:"+ " " +CoinName.upper()+" "+ "at price: "+ str(profit_price)
+                    print(Message_Sent)
+                    send_email("Sell Coin",Message_Sent)
                     break
                 elif Check_Live_Price <= loss_price:
                     print("Stop-loss reached and Stopped script")
