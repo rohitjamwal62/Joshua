@@ -12,43 +12,40 @@ from Telegram_Pull import main_calculation,stop
 current_time = datetime.now()
 formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-# API KEY_HASH
-api_id = config.getint('Telegram', 'api_id')  # Convert to int
-api_hash = config.get('Telegram', 'api_hash')
-phone_number = config.get('Telegram', 'phone_number')
-# Group Id
-NewGroup1 = config.getint('Groups', 'NewGroupId1')  # Convert to int
-NewGroup2 = config.getint('Groups', 'NewGroupId2')  # Convert to int
-# Group Name
-Group1 = config.get('GroupName', 'Group1')
-Group2 = config.get('GroupName', 'Group2')
-# Percentage
-profit_percent = config.get('Percentage', 'Profit_Percentage')
-loss_percent = config.get('Percentage', 'Loss_Percentage')
-
-
-GroupName = "Testing Group"
-Group_Id = -4173573828
 
 async def main():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    # API KEY_HASH
+    api_id = config.getint('Telegram', 'api_id')  # Convert to int
+    api_hash = config.get('Telegram', 'api_hash')
+    phone_number = config.get('Telegram', 'phone_number')
+    # Group Id
+    NewGroup1_Id = config.getint('Groups', 'NewGroupId1')  # Convert to int
+    NewGroup2_Id = config.getint('Groups', 'NewGroupId2')  # Convert to int
+    NewGroup3_Id = config.getint('Groups', 'NewGroupId3')  # Convert to int
+    # Group Name
+    Group1_Name = config.get('GroupName', 'Group1')
+    Group2_Name = config.get('GroupName', 'Group2')
+    Group3_Name = config.get('GroupName', 'Group3')
+    # Percentage
+    profit_percent = config.get('Percentage', 'Profit_Percentage')
+    loss_percent = config.get('Percentage', 'Loss_Percentage')
+
     async with TelegramClient('session_name', api_id, api_hash) as client:
         try:
             await client.start(phone_number)
-            @client.on(NewMessage(chats=Group_Id))
-            async def handle_testing_2_message(event):
-                await handle_group_message(client, event, GroupName,Group_Id)  # Pass client to the function
+            @client.on(NewMessage(chats=NewGroup3_Id))
+            async def handle_group_message(event):
+                await handle_message(client, event, Group3_Name,NewGroup3_Id, profit_percent, loss_percent)
             await client.run_until_disconnected()
         except errors.SessionPasswordNeededError:
             print("The session file is locked with a password. Please unlock it or remove the session file.")
         except Exception as e:
             print(f"An error occurred: {e}")
-            
-async def handle_group_message(client, event, groups_names,Group_Id):
+
+async def handle_message(client,event,groups_names,Group_Id,profit_percent,loss_percent):
     try:
-        profit_percent = 60
-        loss_percent = 10
         message = event.message
         string_lower = str(message.text).lower()
         search_string = "long"  # Adjust this based on your signal format
