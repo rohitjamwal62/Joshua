@@ -37,7 +37,7 @@ async def main():
             
 async def handle_group_message(client, event, groups_names,Group_Id):
     try:
-        profit_percent = 20
+        profit_percent = 60
         loss_percent = 10
         message = event.message
         string_lower = str(message.text).lower()
@@ -52,7 +52,9 @@ async def handle_group_message(client, event, groups_names,Group_Id):
                 Check_Live_Price = Get_Current_Coin_Price(CoinName)
                 print("#############  Check Live Price : ",Check_Live_Price," ###############")
                 profit_price = eval(cal.get('profit_price'))
+                print("Profit Price : ",profit_price)
                 loss_price = eval(cal.get('loss_price'))
+                print("Loss Price : ",loss_price)
                 if Check_Live_Price >= profit_price:
                     Sell_Coin(CoinName.upper(), Purchage_Price)
                     print("Sold coin for profit")
@@ -62,7 +64,7 @@ async def handle_group_message(client, event, groups_names,Group_Id):
                     stop()
                 else:
                     print("Price not reached. Waiting...")
-                    await asyncio.sleep(3600)  # Wait for an hour before checking again
+                    await asyncio.sleep(60)  # Wait for an hour before checking again
         else:
             print("Signal not found in message.")
     except Exception as e:
