@@ -1,4 +1,15 @@
-import sys
+from email.mime.text import MIMEText
+import configparser,requests,time,asyncio,sys,smtplib
+from email.mime.text import MIMEText
+
+config = configparser.ConfigParser()
+config.read('config.ini')
+# Email Setting
+SMTP_SERVER = config.get('Email', 'SMTP_SERVER')
+SMTP_PORT = config.getint('Email', 'SMTP_PORT')  # Convert to int
+EMAIL_USERNAME = config.get('Email', 'EMAIL_USERNAME')
+EMAIL_PASSWORD = config.get('Email', 'EMAIL_PASSWORD')
+RECIPIENT_EMAIL = config.get('Email', 'RECIPIENT_EMAIL')
 
 def calculate_sell_off_prices(purchase_price, profit_percent, loss_percent):
     profit_price = purchase_price * (1 + profit_percent / 100)
@@ -38,3 +49,14 @@ def Coin_Name(String):
 def stop():
     print("Stopping the script...")
     sys.exit()
+
+def send_email(subject, message):
+    msg = MIMEText(message)
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_USERNAME
+    msg['To'] = RECIPIENT_EMAIL
+
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_USERNAME, RECIPIENT_EMAIL, msg.as_string())

@@ -8,17 +8,27 @@ from GoogleSheet import get_sheet_row,Create_Row
 from match_string import StopLoss,Entry_Purchage,Coin_Name
 from Coinspot_API import Sell_Coin,Buy_Coin,Get_Current_Coin_Price
 from Telegram_Pull import main_calculation,stop
+
 current_time = datetime.now()
 formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-api_id = '25500977'
-api_hash = '7cf41fa26b716a01a46d744758bfbde2'
-phone_number = '+61483212824'
+config = configparser.ConfigParser()
+config.read('config.ini')
+# API KEY_HASH
+api_id = config.getint('Telegram', 'api_id')  # Convert to int
+api_hash = config.get('Telegram', 'api_hash')
+phone_number = config.get('Telegram', 'phone_number')
+# Group Id
+NewGroup1 = config.getint('Groups', 'NewGroupId1')  # Convert to int
+NewGroup2 = config.getint('Groups', 'NewGroupId2')  # Convert to int
+# Group Name
+Group1 = config.get('GroupName', 'Group1')
+Group2 = config.get('GroupName', 'Group2')
+# Percentage
+profit_percent = config.get('Percentage', 'Profit_Percentage')
+loss_percent = config.get('Percentage', 'Loss_Percentage')
 
-# Group_Name1 = "Binance Killers® VIP"
-# Group_Name2 = "Binance Killers® Cornix"
-# Group_Name1_Id = -1001178421859
-# Group_Name2_Id = -1001336862166
+
 GroupName = "Testing Group"
 Group_Id = -4173573828
 
