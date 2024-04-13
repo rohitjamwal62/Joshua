@@ -15,7 +15,8 @@ def calculate_percentage_change(purchase_price, sell_price):
     return change
 
 
-def main_calculation(purchase_price,profit_percent,loss_percent):
+def main_calculation(purchase_prices,profit_percent,loss_percent):
+    purchase_price = eval(purchase_prices)
     Store_Calculation = dict()
     profit_price, loss_price = calculate_sell_off_prices(purchase_price, profit_percent, loss_percent)
     profit, loss = calculate_profit_and_loss(purchase_price, profit_price)

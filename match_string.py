@@ -5,7 +5,6 @@ def StopLoss(String):
     return Text
 
 def Entry_Purchage(String):
-    print("yess")
     Purchage_Entry = 0
     pattern = r"entry:\s*([\d\.\s-]+)"
     match = re.search(pattern, String)
