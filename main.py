@@ -23,11 +23,12 @@ async def main():
                     # Re-read config.ini before processing each message
                     config.read('config.ini')
                     profit_percent = config.getint('Percentage', 'Profit_Percentage')
-                    
                     loss_percent = config.getint('Percentage', 'Loss_Percentage')
-                    print(profit_percent,"==========profit_percent")
-                    print(loss_percent,"==========loss_percent")
-                    await handle_message(client, event, Group3_Name, NewGroup3_Id, profit_percent, loss_percent)
+                    Purchase_Price = config.getint('Purchase_Price', 'P_Price')
+                    print(Purchase_Price," : Parchage Price")
+                    print(profit_percent,"% : profit_percentage")
+                    print(loss_percent,"% : loss_percentage")
+                    await handle_message(client, event, Group3_Name, NewGroup3_Id, profit_percent, loss_percent,Purchase_Price)
                 await client.run_until_disconnected()
         except errors.SessionPasswordNeededError:
             print("The session file is locked with a password. Please unlock it or remove the session file.")
@@ -36,36 +37,40 @@ async def main():
         finally:
             await asyncio.sleep(60)  # Wait for a minute before attempting to reconnect
 
-async def handle_message(client, event, groups_names, Group_Id, profit_percent, loss_percent):
+async def handle_message(client, event, groups_names, Group_Id, profit_percent, loss_percent,Purchase_Price):
     try:
         message = event.message
         string_lower = str(message.text).lower()
         search_string = "long"  # Adjust this based on your signal format
         if search_string in string_lower:
-            Purchage_Price = Entry_Purchage(string_lower)
+            Entry_Price = Entry_Purchage(string_lower)
             CoinName = Coin_Name(string_lower)
-            Buy_Coin(CoinName.upper(), Purchage_Price)
-            Message_Sent = f"Bought coin:"+ " " +CoinName.upper()+" "+ "at price: "+ Purchage_Price
+            Buy_Coin(CoinName.upper(), Purchase_Price)
+            Message_Sent = f"Bought coin:"+ " " +CoinName.upper()+" "+ "at price: "+ str(Purchase_Price)
             print(Message_Sent)
             send_email("Buy Coin",Message_Sent)
       
             while True:
-                cal = main_calculation(Purchage_Price, profit_percent, loss_percent)
+                cal = main_calculation(Entry_Price,profit_percent,loss_percent,Purchase_Price)
                 Check_Live_Price = Get_Current_Coin_Price(CoinName)
                 print("#############  Check Live Price : ", Check_Live_Price," ###############")
                 profit_price = eval(cal.get('profit_price'))
-                print("Profit Price : ", profit_price)
                 loss_price = eval(cal.get('loss_price'))
+                loss_price_entry = eval(cal.get('loss_price_entry'))
+                profit_price_Entry = eval(cal.get('profit_price_Entry'))
+                print("Profit Price : ", profit_price)
                 print("Loss Price : ", loss_price)
-                if Check_Live_Price >= profit_price:
+                print("Loss Entry Price : ", loss_price_entry)
+                print("Profit Entry Price : ", profit_price_Entry)
+                if Check_Live_Price >= profit_price_Entry:
+                    profit_price = 0.1 #Remove
                     Sell_Coin(CoinName.upper(), profit_price)
-                    print("Sold coin for profit")
-                    Message_Sent = f"Sell coin:"+ " " +CoinName.upper()+" "+ "at price: "+ str(profit_price)
+                    Message_Sent = f"Sold coin:"+ " " +CoinName.upper()+" "+ "at price: "+ str(profit_price)
                     print(Message_Sent)
                     send_email("Sell Coin",Message_Sent)
                     break
-                elif Check_Live_Price <= loss_price:
-                    print("Stop-loss reached and Stopped script")
+                elif Check_Live_Price <= loss_price_entry:
+                    print(f"Stop-loss reached and Stopped script. Loss Price is : {loss_price}")
                     stop()
                 else:
                     print("Price not reached. Waiting...")
