@@ -15,11 +15,6 @@ def calculate_price(original_price, percent_change):
 
 def main_calculation(entry_prices,profit_percent,loss_percent,purchase_price):
     entry_price = eval(entry_prices)
-    
-    # print(type(entry_price),"==========entry_price ")
-    # print(type(profit_percent),"==========profit_percent ")
-    # print(type(loss_percent),"==========loss_percent ")
-    # print(type(purchase_price),"==========purchase_price ")
     Store_Calculation = dict()
     profit_price = calculate_price(purchase_price, profit_percent)
     profit_price_Entry = calculate_price(entry_price, profit_percent)
