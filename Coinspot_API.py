@@ -6,7 +6,7 @@ API_SECRET = 'T1WG4REYWQA0XK8V7QCP2XGF8NK8BJQ1LR7RGVGHMRBLP22AXQ36K3T1LKGCKD3LB9
 def Buy_Coin(CoinName,Price_Purchage):
     SELL_NOW_URL = 'https://www.coinspot.com.au/api/v2/my/buy/now'
     nonce = int(time.time())
-    params = {"nonce": nonce, "cointype": CoinName, "amounttype": "coin", "amount" : "0.1"}
+    params = {"nonce": nonce, "cointype": CoinName, "amounttype": "coin", "amount" : Price_Purchage}
     json_params = json.dumps(params, separators=(',' , ':') )
     signature = hmac.new(API_SECRET.encode(), json_params.encode(), hashlib.sha512).hexdigest()
     headers = {
@@ -20,7 +20,7 @@ def Buy_Coin(CoinName,Price_Purchage):
 def Sell_Coin(CoinName,Price_Purchage):
     SELL_NOW_URL = 'https://www.coinspot.com.au/api/v2/my/sell/now'
     nonce = int(time.time())
-    params = {"nonce": nonce, "cointype": CoinName, "amounttype": "coin", "amount" : "0.1"}
+    params = {"nonce": nonce, "cointype": CoinName, "amounttype": "coin", "amount" : Price_Purchage}
     json_params = json.dumps(params, separators=(',' , ':') )
     signature = hmac.new(API_SECRET.encode(), json_params.encode(), hashlib.sha512).hexdigest()
     headers = {

@@ -34,6 +34,7 @@ def Coin_Name(String):
 def stop():
     print("Stopping the script...")
     sys.exit()
+    
 
 def send_email(subject, message):
     msg = MIMEText(message)

@@ -30,6 +30,9 @@ async def main():
                 #     profit_percent = config.getint('Percentage', 'Profit_Percentage')
                 #     loss_percent = config.getint('Percentage', 'Loss_Percentage')
                 #     Purchase_Price = config.getint('Purchase_Price', 'P_Price')
+                #     print(Purchase_Price," : Parchage Price")
+                #     print(profit_percent,"% : profit_percentage")
+                #     print(loss_percent,"% : loss_percentage")
                 #     await handle_message(client, event, Group_Id4, profit_percent, loss_percent,Purchase_Price)
                 # # End Here 
                 
@@ -42,6 +45,9 @@ async def main():
                     profit_percent = config.getint('Percentage', 'Profit_Percentage')
                     loss_percent = config.getint('Percentage', 'Loss_Percentage')
                     Purchase_Price = config.getint('Purchase_Price', 'P_Price')
+                    print(Purchase_Price," : Parchage Price")
+                    print(profit_percent,"% : profit_percentage")
+                    print(loss_percent,"% : loss_percentage")
                     await handle_message(client, event, NewGroup3_Id, profit_percent, loss_percent,Purchase_Price)
 
                 # CORNIX GROUP
@@ -51,7 +57,11 @@ async def main():
                     profit_percent = config.getint('Percentage', 'Profit_Percentage')
                     loss_percent = config.getint('Percentage', 'Loss_Percentage')
                     Purchase_Price = config.getint('Purchase_Price', 'P_Price')
+                    print(Purchase_Price," : Parchage Price")
+                    print(profit_percent,"% : profit_percentage")
+                    print(loss_percent,"% : loss_percentage")
                     await handle_message(client, event, CorNIx_Group_Id, profit_percent, loss_percent,Purchase_Price)
+
 
                 await client.run_until_disconnected()
         except errors.SessionPasswordNeededError:
@@ -63,6 +73,9 @@ async def main():
             print(f"An error occurred: {e}")
             await asyncio.sleep(60)  # Wait for a minute before attempting to reconnect
             
+            
+            
+        
 
 async def handle_message(client, event, Group_Id, profit_percent, loss_percent,Purchase_Price):
     try:
@@ -93,9 +106,6 @@ async def handle_message(client, event, Group_Id, profit_percent, loss_percent,P
                 print("Loss Price : ", loss_price)
                 print("Loss Entry Price : ", loss_price_entry)
                 print("Profit Entry Price : ", profit_price_Entry)
-                print(Purchase_Price," : Parchage Price")
-                print(profit_percent,"% : profit_percentage")
-                print(loss_percent,"% : loss_percentage")
                 if Check_Live_Price >= profit_price_Entry:
                     # profit_price = 0.1 #Remove
                     Sell_Coin(CoinName.upper(), profit_price)
