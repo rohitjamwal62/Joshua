@@ -19,3 +19,15 @@ def Entry_Purchage(String):
 def Coin_Name(String):
     Coin = str(String).split('$')[1].split('/')[0].strip()
     return Coin
+
+def Filtered_records(string_lower):
+    lines = str(string_lower).split('\n')
+    pair = None
+    entry = None
+    for line in lines:
+        if line.startswith('pair:'):
+            pair = line
+        elif line.startswith('entry:'):
+            entry = line 
+    data = [pair,entry]
+    return data
