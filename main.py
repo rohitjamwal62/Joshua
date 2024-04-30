@@ -72,7 +72,6 @@ async def handle_message(client, event, Group_Id, profit_percent, loss_percent,P
         if search_string in string_lower:
             Pair_Entry_live = Filtered_records(string_lower)
             pair_live_list = [Pair_Entry_live[0].strip().replace(' ',''),Pair_Entry_live[1].strip().replace(' ','')]
-            # print(pair_live_list,"======  yess ssssssssssss  ==============")   
             Match_Gsheet_records = get_sheet_row(pair_live_list)
             if Match_Gsheet_records != True:
                 print("Signal Found................")
@@ -80,25 +79,31 @@ async def handle_message(client, event, Group_Id, profit_percent, loss_percent,P
                 Entry_Price = Entry_Purchage(string_lower)
                 CoinName = Coin_Name(string_lower)
                 Buy_Coin(CoinName.upper(), Purchase_Price)
+                # Buy_Coin(CoinName.upper(), '0.1')
                 Message_Sent = f"Bought coin:"+ " " +CoinName.upper()+" "+ "at price: "+ str(Purchase_Price)
-                print(Message_Sent)
                 send_email("Buy Coin",Message_Sent)
                 Check_Live_Price = Get_Current_Coin_Price(CoinName)
+                cal = main_calculation(Entry_Price,profit_percent,loss_percent,Purchase_Price)
+                Buy_profit_price = eval(cal.get('profit_price'))
+                Buy_loss_price = eval(cal.get('loss_price'))
+                loss_price_entry = eval(cal.get('loss_price_entry'))
+                profit_price_Entry = eval(cal.get('profit_price_Entry'))
+                print("\n")
+                print(f"Buy Amount at price : ${Purchase_Price}")
+                print(f"Coin Price (At time of purchage): {CoinName.upper()} ${Check_Live_Price}")
+                # print(f"Profit : {profit_percent}% and Price : ${Buy_profit_price}") 
+                # print(f"Stop loss : {loss_percent}% and Price : ${Buy_loss_price}")
+                print(f"Profit : {profit_percent}% and Entry Price : ${profit_price_Entry}") 
+                print(f"Stop loss : {loss_percent}% and Entry Price : ${loss_price_entry}")
+                print("\n")
                 
                 while True:
                     cal = main_calculation(Entry_Price,profit_percent,loss_percent,Purchase_Price)
-                    # print("#############  Check Live Price : ", Check_Live_Price," ###############")
                     Buy_profit_price = eval(cal.get('profit_price'))
                     Buy_loss_price = eval(cal.get('loss_price'))
                     loss_price_entry = eval(cal.get('loss_price_entry'))
                     profit_price_Entry = eval(cal.get('profit_price_Entry'))
-                    print("\n")
-                    print(f"Buy Amount at : ${Purchase_Price}")
-                    print(f"Coin Price (At time of purchage): {CoinName.upper()} ${Check_Live_Price}")
-                    print(f"Profit : {profit_percent}% and Price : ${Buy_profit_price}") 
-                    print(f"Stop loss : {loss_percent}% and Price : ${Buy_loss_price}")
-                    print("\n")
-
+                    Check_Live_Price = Get_Current_Coin_Price(CoinName)
                     if Check_Live_Price >= profit_price_Entry:
                         # profit_price = 0.1 #Remove
                         Sell_Coin(CoinName.upper(), Buy_profit_price)
@@ -111,7 +116,7 @@ async def handle_message(client, event, Group_Id, profit_percent, loss_percent,P
                         stop()
                     else:
                         print("Price not reached. Waiting......")
-                        await asyncio.sleep(30)  # Wait for a minute before checking again
+                        await asyncio.sleep(1)  # Wait for a minute before checking again
             else:
                 print("This Signal Already exists")
         else:
