@@ -13,19 +13,21 @@ RECIPIENT_EMAIL = config.get('Email', 'RECIPIENT_EMAIL')
 def calculate_price(original_price, percent_change):
     return original_price * (1 + percent_change / 100)
 
-def main_calculation(entry_prices,profit_percent,loss_percent,purchase_price):
-    entry_price = eval(entry_prices)
+
+def main_calculation(entry_prices, profit_percent, loss_percent, purchase_price):
+    entry_price = float(entry_prices)
     Store_Calculation = dict()
     profit_price = calculate_price(purchase_price, profit_percent)
     profit_price_Entry = calculate_price(entry_price, profit_percent)
     loss_price = calculate_price(purchase_price, -loss_percent)
     loss_price_entry = calculate_price(entry_price, -loss_percent)
     Store_Calculation['purchase_price'] = purchase_price
-    Store_Calculation['profit_price'] = f'{profit_price:.2f}'
-    Store_Calculation['loss_price'] = f'{loss_price:.2f}'
-    Store_Calculation['profit_price_Entry'] = f'{profit_price_Entry:.2f}'
-    Store_Calculation['loss_price_entry'] = f'{loss_price_entry:.2f}'
+    Store_Calculation['profit_price'] = f'{profit_price:.5f}'
+    Store_Calculation['loss_price'] = f'{loss_price:.5f}'
+    Store_Calculation['profit_price_Entry'] = f'{profit_price_Entry:.5f}'
+    Store_Calculation['loss_price_entry'] = f'{loss_price_entry:.5f}'
     return Store_Calculation
+
 
 def Coin_Name(String):
     Coin = str(String).split('$')[1].split('/')[0].strip()
